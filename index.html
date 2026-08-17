@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時空旅人的任務：行李箱奇幻之旅</title>
+    
+    <!-- 網頁分頁圖標 (Favicon) -->
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <style>
+        :root {
+            --primary-gold: #FFC048;
+            --light-gold: #FFDD59;
+            --card-bg: rgba(45, 20, 65, 0.88);
+            --text-light: #F4F6F7;
+            --primary-red: #FF4757;
+            --btn-red-gradient: linear-gradient(135deg, #FF4757, #FF6B81);
+            --btn-gold-gradient: linear-gradient(135deg, #FFA502, #FF6348);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+        }
+
+        body {
+            background: url('bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* 主容器：電腦/平板橫向展開，最大寬度 880px */
+        .game-container {
+            width: 100%;
+            max-width: 880px;
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 221, 89, 0.45);
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 35px rgba(224, 86, 162, 0.4);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 頂部 Header */
+        .header {
+            background: rgba(30, 10, 45, 0.75);
+            padding: 14px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 221, 89, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            color: var(--light-gold);
+            letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(255, 221, 89, 0.6);
+        }
+
+        .header h2 {
+            font-size: 0.85rem;
+            color: #F8EFBA;
+            font-weight: 300;
+            margin-top: 2px;
+        }
+
+        .progress-bar-wrap {
+            width: 60%;
+            max-width: 400px;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin: 10px auto 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--btn-gold-gradient);
+            transition: width 0.4s ease;
+        }
+
+        /* 橫向雙欄主佈局 (電腦/平板橫版) */
+        .content-body {
+            display: flex;
+            flex-direction: row;
+            padding: 24px;
+            gap: 24px;
+            align-items: stretch;
+            min-height: 460px;
+        }
+
+        /* 左側插畫區 */
+        .illustration-box {
+            flex: 1;
+            background: rgba(20, 5, 30, 0.45);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .illustration-box img {
+            width: 100%;
+            height: 100%;
+            max-height: 380px;
+            object-fit: contain;
+            border-radius: 14px;
+        }
+
+        /* 右側故事與選項區 */
+        .interactive-box {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .story-box {
+            background: rgba(255, 255, 255, 0.12);
+            border-left: 4px solid var(--primary-gold);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #FFFFFF;
+        }
+
+        .story-box strong {
+            color: var(--light-gold);
+            font-weight: bold;
+        }
+
+        /* 選項按鈕區 */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 12px 16px;
+            border-radius: 14px;
+            text-align: left;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 165, 2, 0.3);
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 165, 2, 0.35);
+        }
+
+        .option-btn strong {
+            color: var(--light-gold);
+            font-size: 0.92rem;
+        }
+
+        .option-btn span {
+            display: block;
+            color: #F1F2F6;
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
+
+        .start-btn {
+            background: var(--btn-gold-gradient);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 99, 72, 0.45);
+            transition: transform 0.2s;
+            margin-top: auto;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* 結算畫面 (橫向全寬優化) */
+        .result-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 30px 24px;
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .result-screen h2 {
+            color: #2ED573;
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(46, 213, 115, 0.4);
+        }
+
+        .title-badge {
+            background: linear-gradient(135deg, #D35400, #E67E22);
+            color: white;
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 18px rgba(211, 84, 0, 0.45);
+            letter-spacing: 1px;
+        }
+
+        .result-desc-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 18px 20px;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #F1F2F6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .reward-card {
+            background: linear-gradient(135deg, #FFF9E6, #FFEAA7);
+            border: 2px dashed #FFA502;
+            border-radius: 18px;
+            padding: 20px 20px;
+            width: 100%;
+            color: #2C3E50;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .reward-card .points-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+        }
+
+        .highlight-instant {
+            font-size: 1.45rem;
+            color: #D63031;
+            font-weight: 900;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            margin: 0 1px;
+            display: inline-block;
+        }
+
+        .reward-card p {
+            font-size: 0.85rem;
+            color: #57606F;
+            line-height: 1.5;
+        }
+
+        .cta-btn {
+            background: var(--btn-red-gradient);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.5);
+            transition: transform 0.2s;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .retry-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #CED6E0;
+            font-size: 0.85rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 📱 行動裝置自適應 (螢幕寬度小於 768px 時自動轉為直式) */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .game-container {
+                max-width: 440px;
+            }
+
+            .content-body {
+                flex-direction: column;
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .illustration-box {
+                height: 250px;
+            }
+
+            .illustration-box img {
+                max-height: 100%;
+            }
+
+            .progress-bar-wrap {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <!-- 頂部標題 -->
+    <div class="header">
+        <h1>時空旅人的任務</h1>
+        <h2>行李箱奇幻之旅</h2>
+        <div class="progress-bar-wrap" id="progressWrap">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- 橫向雙欄主體 (左圖右文) -->
+    <div class="content-body" id="gameScreen">
+        <!-- 左側插畫 -->
+        <div class="illustration-box" id="illustrationBox">
+            <img id="sceneImage" src="" alt="關卡情境插畫">
+        </div>
+
+        <!-- 右側情境與選項 -->
+        <div class="interactive-box">
+            <div class="story-box" id="storyText">
+                載入故事中...
+            </div>
+            <div class="options-grid" id="optionsContainer"></div>
+        </div>
+    </div>
+
+    <!-- 結算畫面 -->
+    <div class="result-screen" id="resultScreen">
+        <h2>🎉 任務完成，闖關成功!</h2>
+
+        <div class="title-badge" id="userTitle">前瞻的時空領航員</div>
+
+        <div class="result-desc-card" id="userDesc">
+            你對未來充滿遠見與規劃，不論面對何種未知的挑戰，都能選擇最有效率且具長遠效益的最佳路徑！善於運用多元金融工具達到資產增值與防護。
+        </div>
+
+        <div class="reward-card">
+            <div class="points-text">🎁 綁定LINE 個人化服務，<span class="highlight-instant">立即</span>參加 LINE POINTS 抽獎!</div>
+            <p>完成個人化綁定，立即抽獎領LINE POINTS兌換序號！</p>
+        </div>
+
+        <button class="cta-btn" onclick="drawReward()">100%中獎，好手氣就現在！ ➔</button>
+
+        <a class="retry-link" onclick="resetGame()">↺ 重新測驗一次</a>
+    </div>
+</div>
+
+<script>
+    const gameData = [
+        {
+            level: 0,
+            imgUrl: "p0.jpg",
+            story: "<strong>【故事背景】</strong><br>你搭上駛向未來的列車，下車時拿錯了一個復古行李箱。為了尋找失主，你必須透過 <strong>5 個情境選擇</strong>，踏上一段未知的冒險……",
+            isStart: true
+        },
+        {
+            level: 1,
+            imgUrl: "p1.jpg",
+            story: "<strong>【第一關：走進異國街頭】</strong><br>天色漸暗。面對未知的環境，你掏出的<strong>第一個隨身道具</strong>是？",
+            options: [
+                { title: "A：預先準備好的地圖與指南", desc: "冷靜比對方向與環境。" },
+                { title: "B：自動指引路徑的星光羅盤", desc: "設定好即自動導引最適路線，省時省力。" },
+                { title: "C：幸運水晶偵測器", desc: "抓緊機會，前往幸運水晶最多的地方收集攜帶回家。" }
+            ]
+        },
+        {
+            level: 2,
+            imgUrl: "p2.jpg",
+            story: "<strong>【第二關：解鎖寶物裝備】</strong><br>行李箱內傳出指示：「<strong>請選擇一枚冒險徽章</strong>佩戴，陪你走過接下來的旅程。」你會選擇？",
+            options: [
+                { title: "A：美食徽章", desc: "隨時享受在地餐館與特色市集，享受無限次美味。" },
+                { title: "B：羽翼徽章", desc: "召喚飛鷹跨越山海，並免費進入雲端休息室享用貴賓服務。" },
+                { title: "C：奇幻單輪車徽章", desc: "提供專屬座騎停靠位，免費陪伴你一路平順護送。" }
+            ]
+        },
+        {
+            level: 3,
+            imgUrl: "p3.jpg",
+            story: "<strong>【第三關：應對突發危機】</strong><br>到了下一站，前方的「時空傳送門」警報大作：「能量不足！」若要順利通過，需要<strong>額外取得「時空結晶」</strong>，你會怎麼做？",
+            options: [
+                { title: "A：按下「緊急快速補充鈕」", desc: "先借用結晶通過再說，效率第一！" },
+                { title: "B：研讀門旁的「規則告示牌」", desc: "確認還期與消耗規則，計算划算才補充。" },
+                { title: "C：放棄搭乘傳送門，選擇徒步繞路", desc: "多花時間也沒關係，絕不輕易借用額外結晶。" }
+            ]
+        },
+        {
+            level: 4,
+            imgUrl: "p4.jpg",
+            story: "<strong>【第四關：時空岔路的抉擇】</strong><br>通過傳送門後，眼前出現三條岔路，你會選擇<strong>沿著哪條路前進</strong>？",
+            options: [
+                { title: "A：通往浮空的「星雲光索捷徑」", desc: "偶有亂流起伏，但能最快登頂奪得豐厚秘寶。" },
+                { title: "B：穿過林蔭的「全景空中步道」", desc: "平坦且設有補給站，飽覽美景並穩定前行。" },
+                { title: "C：深入地底的「星岩防護地道」", desc: "厚實岩層隔絕風暴，按部就班確保旅途安全。" }
+            ]
+        },
+        {
+            level: 5,
+            imgUrl: "p5.jpg",
+            story: "<strong>【第五關：終極禮物】</strong><br>終於! 行李箱完好地歸還給主人。為答謝你的智慧，主人讓你選擇一盆「<strong>幸運植物</strong>」，你希望它如何生長？",
+            options: [
+                { title: "A：披上堅硬護甲，抵禦突發碰撞", desc: "提供堅實防護，即時化解不可預期的風險。" },
+                { title: "B：結出能量果實，每天冒出新芽", desc: "兼顧生長與收成，讓資源隨時靈活增值。" },
+                { title: "C：扎根深厚長青，提供持久滋養", desc: "為長遠歲月打底，確保未來年歲無憂。" }
+            ]
+        }
+    ];
+
+    let currentStep = 0;
+
+    function initGame() {
+        currentStep = 0;
+        document.getElementById("progressWrap").style.display = "block";
+        document.getElementById("gameScreen").style.display = "flex";
+        document.getElementById("resultScreen").style.display = "none";
+        showStep();
+    }
+
+    function showStep() {
+        const data = gameData[currentStep];
+
+        document.getElementById("sceneImage").src = data.imgUrl;
+        document.getElementById("storyText").innerHTML = data.story;
+
+        if (currentStep === 0) {
+            document.getElementById("progressBar").style.width = "0%";
+        } else {
+            document.getElementById("progressBar").style.width = (currentStep / 5 * 100) + "%";
+        }
+
+        const container = document.getElementById("optionsContainer");
+        container.innerHTML = "";
+
+        if (data.isStart) {
+            const btn = document.createElement("button");
+            btn.className = "start-btn";
+            btn.innerHTML = "開啟時空冒險之旅 ➔";
+            btn.onclick = () => { currentStep++; showStep(); };
+            container.appendChild(btn);
+        } else {
+            data.options.forEach((opt) => {
+                const btn = document.createElement("div");
+                btn.className = "option-btn";
+                btn.onclick = () => handleSelect();
+                btn.innerHTML = `<strong>${opt.title}</strong><span>${opt.desc}</span>`;
+                container.appendChild(btn);
+            });
+        }
+    }
+
+    function handleSelect() {
+        currentStep++;
+        if (currentStep < gameData.length) {
+            showStep();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("progressWrap").style.display = "none";
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("resultScreen").style.display = "flex";
+
+        const titles = [
+            { 
+                title: "前瞻的時空領航員", 
+                desc: "你對未來充滿遠見與規劃，不論面對何種未知的挑戰，都能選擇最有效率且具長遠效益的最佳路徑！善於運用多元金融工具達到資產增值與防護。" 
+            },
+            { 
+                title: "敏銳的冒險決策者", 
+                desc: "你的直覺非常敏銳，善於把握當下的資源與最佳時機，能迅速在複雜環境中找到最有利的突破口！這讓你在這趟行李箱奇幻之旅中順利通過考驗！" 
+            },
+            { 
+                title: "睿智的時空觀察者", 
+                desc: "你擁有極高的適應力與穩健的決策智慧，在漫長且充滿未知變數的旅程中，總是能憑藉冷靜的觀察力評估風險，並協助團隊化解所有危機！" 
+            }
+        ];
+
+        const randomResult = titles[Math.floor(Math.random() * titles.length)];
+        document.getElementById("userTitle").innerText = randomResult.title;
+        document.getElementById("userDesc").innerText = randomResult.desc;
+    }
+
+    function drawReward() {
+        alert("🎉恭喜完成時空冒險！即將前往華南銀行 LINE，解鎖個人化服務！");
+    }
+
+    function resetGame() {
+        initGame();
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
